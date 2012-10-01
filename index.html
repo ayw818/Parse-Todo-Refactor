@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Parse JavaScript Todo App</title>
+    <link href="css/todos.css" media="all" rel="stylesheet" type="text/css"/>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="js/libraries/underscore-1.1.6.js"></script>
+    <script src="js/libraries/backbone.js"></script>
+    <script src="http://www.parsecdn.com/js/parse-1.0.18.min.js"></script>
+  </head>
+
+  <body>
+
+    <div id="todoapp">
+      <div class="title">
+        <h1>Parse Todos</h1>
+      </div>
+
+      <div class="content">
+        <header id="header"></header>
+      <div class="login">
+        <form class="login-form">
+          <h2>Log In</h2>
+          <div class="error" style="display:none"></div>
+          <input type="text" id="login-username" placeholder="Username" />
+          <input type="password" id="login-password" placeholder="Password" />
+          <button id="login">Log In</button>
+        </form>
+
+        <form class="signup-form">
+          <h2>Sign Up</h2>
+          <div class="error" style="display:none"></div>
+          <input type="text" id="signup-username" placeholder="Username" />
+          <input type="password" id="signup-password" placeholder="Create a Password" />
+          <button id="signup">Sign Up</button>
+        </form>
+      </div>
+      </div>
+    </div>
+
+    <div id="credits">
+      Powered by <a href="https://www.parse.com">Parse</a> using the <a href="https://www.parse.com/docs/js_guide">JavaScript SDK</a>
+    </div>
+
+    <!-- Login handling -->
+    <script type="text/javascript">
+
+      $(function(){
+
+        // Initialize Parse with your Parse application javascript keys
+        Parse.initialize("0Oq3tTp9JMvd72LOrGN25PiEq9XgVHCxo57MQbpT", "vUFy2o7nFx3eeKVlZneYMPI2MBoxT5LhWNoIWPja");
+
+        $("#login").click(function(e) {
+          e.preventDefault();
+          var username = $("#login-username").val();
+          var password = $("#login-password").val();
+          
+          Parse.User.logIn(username, password, {
+            success: function(user) {
+              openApp();
+            },
+
+            error: function(user, error) {
+              $(".login-form .error").html("Invalid username or password. Please try again.").show();
+              $(".login-form button").removeAttr("disabled");
+            }
+          });
+
+          $(".login-form button").attr("disabled", "disabled");
+        });
+
+        $("#signup").click(function(e) {
+          e.preventDefault();
+          var username = $("#signup-username").val();
+          var password = $("#signup-password").val();
+          
+          Parse.User.signUp(username, password, { ACL: new Parse.ACL() }, {
+            success: function(user) {
+              openApp();
+            },
+
+            error: function(user, error) {
+              $(".signup-form .error").html(error.message).show();
+              $(".signup-form button").removeAttr("disabled");
+            }
+          });
+
+          $(".signup-form button").attr("disabled", "disabled");
+        });
+
+        openApp = function (){
+          window.location.href = window.location.href.replace("index.html", "app.html");
+        }
+
+      }); // /function
+    </script> <!-- /login script -->
+  </body>
+
+</html>
